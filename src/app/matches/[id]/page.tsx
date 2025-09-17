@@ -1,11 +1,6 @@
 import MatchDetail from "@/components/Custom/MatchDetails";
-import { matches } from "@/lib/data";
 
-export default async function Matches({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
+export default async function MatchesPage() {
   return (
     <div className="">
       <MatchDetail />

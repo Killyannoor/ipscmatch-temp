@@ -1,6 +1,12 @@
 import React from "react";
 
-const MatchSummary = ({ matchInfo }: { matchInfo: any }) => {
+type MatchInfo = {
+  website: string;
+  email: string;
+  info: string;
+};
+
+const MatchSummary = ({ matchInfo }: { matchInfo: MatchInfo }) => {
   return (
     <div className="bg-white rounded-xl p-6 border border-gray-200 mt-4">
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
