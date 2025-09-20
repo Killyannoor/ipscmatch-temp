@@ -1,17 +1,9 @@
-import MatchSummary from "@/components/Custom/MatchSummary";
-import SquadSignUp from "@/components/Custom/SquadSignup";
-import MatchCard from "@/components/Match/MatchCard";
-import { matches } from "@/lib/data";
+import CompleteSignup from "@/components/Custom/CompleteSignup";
 
-export default async function Matches({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
+export default async function Confirm() {
   return (
     <div className="max-w-5xl mx-auto p-6 space-y-8">
-      <MatchCard match={matches[0]} showInfo />
-      <SquadSignUp />
+      <CompleteSignup />
     </div>
   );
 }

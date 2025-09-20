@@ -1,0 +1,83 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Match {
+  id             Int        @id @default(autoincrement())
+  name           String
+  description    String?
+  email          String   @unique
+  phone          String?
+  website        String?
+  startDate      DateTime?
+  endDate        DateTime?
+  location       String
+  country        String
+  logoPath       String?
+  weaponType     String
+  signupDeadline DateTime
+  level          String
+  capacity       Int
+  squads         Squad[]
+  registrations  MatchRegistration[]
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+}
+
+model Squad {
+  id        Int      @id @default(autoincrement())
+  name      String
+  matchId   Int
+  capacity   Int
+  startTime  DateTime
+  endTime    DateTime
+  match     Match    @relation(fields: [matchId], references: [id])
+  matchregistrations MatchRegistration[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Player {
+  id            Int      @id @default(autoincrement())
+  memberName    String
+  realName      String
+  npsaId        String?   @unique 
+  password      String
+  email         String   @unique
+  phone         String?
+  registrations MatchRegistration[]
+}
+
+model MatchRegistration {
+  id         Int      @id @default(autoincrement())
+  playerId   Int
+  matchId    Int
+  player     Player   @relation(fields: [playerId], references: [id])
+  match      Match    @relation(fields: [matchId], references: [id])
+  suqadId    Int?
+  squad      Squad?   @relation(fields: [suqadId], references: [id])
+  isPaid      Boolean  @default(false)
+  level       String
+  powerFactor String
+  division    String
+  category    String
+  note        String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([playerId, matchId])
+}
+
+// grand senior bij category toevoegen

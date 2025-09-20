@@ -1,16 +1,9 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import {
-  Calendar,
-  Users,
-  Clock,
-  FileSignature,
-  CalendarCheck,
-  Target,
-  Star,
-} from "lucide-react";
-import { Match } from "@/lib/types";
+import { Calendar, Users, Clock, Target, Star } from "lucide-react";
 import MatchSummary from "../Custom/MatchSummary";
+import { Match } from "../../../generated/prisma";
+import { formatDateTime, formatDate } from "@/lib/date";
 
 type MatchCardProps = {
   match: Match;
@@ -42,15 +35,18 @@ export default function MatchCard({
     <Card className="flex flex-col md:flex-row items-center gap-4 p-4 rounded-2xl shadow-lg hover:shadow-xl transition relative">
       {match.country && (
         <div className="absolute top-4 right-4 flex items-center gap-2 bg-white/80 backdrop-blur-sm border px-3 py-1 rounded-full shadow">
-          {match.flagUrl && (
-            <img src={match.flagUrl} alt={match.country} className="w-5 h-5 " />
-          )}
+          <img
+            src="https://upload.wikimedia.org/wikipedia/commons/2/20/Flag_of_the_Netherlands.svg"
+            alt={match.country}
+            className="w-5 h-5 "
+          />
+
           <span className="text-sm font-medium">{match.country}</span>
         </div>
       )}
       <div>
         <img
-          src={match.logo}
+          src={`${match.logoPath!}`}
           alt={`${match.name} logo`}
           className="w-full h-full object-contain rounded-xl max-h-[150px]"
         />
@@ -70,18 +66,18 @@ export default function MatchCard({
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 text-sm">
           <div className="flex items-center text-gray-600">
             <Calendar className="w-4 h-4 mr-2" />
-            Datum: {match.date}
+            Datum: {formatDate(match.startDate)} - {formatDate(match.endDate)}
           </div>
 
           <div
             className={`flex items-center ${
-              match.spotsTaken === match.capacity
+              match.capacity === match.capacity
                 ? "text-red-600"
                 : "text-gray-600"
             }`}
           >
             <Users className="w-4 h-4 mr-2" />
-            {match.spotsTaken} / {match.capacity} plaatsen
+            {match.capacity} / {match.capacity} plaatsen
           </div>
 
           <div className="flex items-center text-gray-600">
@@ -96,10 +92,10 @@ export default function MatchCard({
 
           <div className="flex items-center text-gray-600">
             <Clock className="w-4 h-4 mr-2" />
-            Deadline: {match.signupDeadline}
+            Deadline: {formatDateTime(match.signupDeadline)}
           </div>
 
-          {match.selectedSquad ? (
+          {/* {match.selectedSquad ? (
             <div className="flex items-center text-green-600">
               <CalendarCheck className="w-4 h-4 mr-2" />
               Ingeschreven: squad {match.selectedSquad}
@@ -109,7 +105,7 @@ export default function MatchCard({
               <FileSignature className="w-4 h-4 mr-2" />
               Niet ingeschreven
             </div>
-          )}
+          )} */}
         </div>
 
         {!showInfo && (

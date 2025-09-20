@@ -1,54 +1,46 @@
-import React from "react";
 import Link from "next/link";
+import { Squad } from "../../../generated/prisma";
+import { formatDayAndTime, formatTime } from "@/lib/date";
 
-const registrationStats = [
-  { time: "zaterdag 8:00", total: 10, used: 0, free: 10 },
-  { time: "zaterdag 8:00", total: 10, used: 0, free: 10 },
-  { time: "zaterdag 9:30", total: 10, used: 1, free: 9 },
-  { time: "zaterdag 13:00", total: 10, used: 0, free: 10 },
-  { time: "zaterdag 13:00", total: 10, used: 0, free: 10 },
-  { time: "zaterdag 14:30", total: 10, used: 0, free: 10 },
-  { time: "zondag 8:00", total: 10, used: 0, free: 10 },
-  { time: "zondag 8:00", total: 10, used: 1, free: 9 },
-  { time: "zondag 9:30", total: 10, used: 0, free: 10 },
-  { time: "zondag 13:00", total: 10, used: 0, free: 10 },
-];
-
-const MatchStatistics = () => {
+const MatchStatistics = ({ squads }: { squads: Squad[] }) => {
   return (
-    <div className="bg-white shadow-lg rounded-xl p-6 border border-gray-200">
+    <div className="bg-white shadow-lg rounded-xl p-6 border border-gray-200 overflow-x-auto">
       <h3 className="text-xl font-bold text-gray-800 mb-4">
         Registratie statistieken
       </h3>
-      <table className="min-w-full border-collapse">
+      <table className="min-w-full border-collapse text-sm">
         <thead>
-          <tr className="bg-gray-100">
-            <th className="border-b p-2 text-left">Tijdslot</th>
-            <th className="border-b p-2 text-right">Startplaatsen</th>
-            <th className="border-b p-2 text-right">Gebruikt</th>
-            <th className="border-b p-2 text-right">Vrij</th>
-            <th className="border-b p-2">Status</th>
+          <tr className="bg-gray-100 text-gray-700">
+            <th className="border-b p-2 text-left w-[220px]">Tijdslot</th>
+            <th className="border-b p-2 text-left w-[100px]">Squad</th>
+            <th className="border-b p-2 text-right w-[120px]">Startplaatsen</th>
+            <th className="border-b p-2 text-right w-[100px]">Gebruikt</th>
+            <th className="border-b p-2 text-right w-[100px]">Vrij</th>
+            <th className="border-b p-2 text-center w-[120px]">Status</th>
           </tr>
         </thead>
         <tbody>
-          {registrationStats.map((slot, idx) => (
+          {squads.map((slot, idx) => (
             <tr key={idx} className="hover:bg-gray-50">
-              <td className="border-b p-2">{slot.time}</td>
-              <td className="border-b p-2 text-right">{slot.total}</td>
-              <td className="border-b p-2 text-right">{slot.used}</td>
+              <td className="border-b p-2 text-left">
+                {formatDayAndTime(slot.startTime)} – {formatTime(slot.endTime)}
+              </td>
+              <td className="border-b p-2 text-left">{slot.name}</td>
+              <td className="border-b p-2 text-right">{slot.capacity}</td>
+              <td className="border-b p-2 text-right">0</td>
               <td
                 className={`border-b p-2 text-right ${
-                  slot.free > 0 ? "text-green-600" : "text-red-600"
+                  slot.capacity > 0 ? "text-green-600" : "text-red-600"
                 }`}
               >
-                {slot.free}
+                {slot.capacity}
               </td>
               <td className="border-b p-2 text-center">
-                {slot.free > 0 ? (
+                {slot.capacity > 0 ? (
                   <Link href={`/matches/${1}/aanmelden`}>
-                    <div className=" p-1 bg-green-300 rounded-md">
+                    <span className="px-3 py-1 text-sm bg-green-500 text-white rounded-md hover:bg-green-600">
                       Aanmelden
-                    </div>
+                    </span>
                   </Link>
                 ) : (
                   <span className="bg-red-100 text-red-800 text-xs px-2 py-1 rounded-full">

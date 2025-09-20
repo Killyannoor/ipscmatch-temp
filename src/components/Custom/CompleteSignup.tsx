@@ -1,6 +1,3 @@
-import { matches } from "@/lib/data";
-import MatchCard from "../Match/MatchCard";
-
 export default function CompleteSignup() {
   const squad = {
     name: "Squad 1",
@@ -18,7 +15,6 @@ export default function CompleteSignup() {
         </p>
       </div>
 
-      <MatchCard match={matches[0]} showInfo />
       <div className="max-w-5xl mx-auto font-sans rounded-2xl shadow-lg bg-white p-6 space-y-4 text-sm border-[1px]">
         <h2 className="text-lg font-semibold text-center">
           Wedstrijdgegevens voltooien
@@ -101,6 +97,7 @@ export default function CompleteSignup() {
               "Senior (50–59 jaar)",
               "Supersenior (>60 jaar)",
               "Dames",
+              "Grand senior (>70 jaar)",
             ].map((cat, i) => (
               <label key={cat} className="flex items-center">
                 <input
@@ -108,7 +105,7 @@ export default function CompleteSignup() {
                   name="category"
                   className="mr-2"
                   defaultChecked={i === 0}
-                />{" "}
+                />
                 {cat}
               </label>
             ))}
