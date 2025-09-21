@@ -1,13 +1,23 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Calendar, Users, Clock, Target, Star } from "lucide-react";
+import {
+  Calendar,
+  Users,
+  Clock,
+  Target,
+  Star,
+  CalendarCheck,
+  FileSignature,
+} from "lucide-react";
 import MatchSummary from "../Custom/MatchSummary";
 import { formatDateTime, formatDate } from "@/lib/date";
 import { MatchWithSquadsAndRegistrations } from "@/lib/types";
+import { Squad } from "../../../generated/prisma";
 
 type MatchCardProps = {
   match: MatchWithSquadsAndRegistrations;
   showInfo?: boolean;
+  selectedSquad?: Squad | null;
   onSignup?: () => void;
 };
 
@@ -15,6 +25,7 @@ export default function MatchCard({
   match,
   onSignup,
   showInfo = false,
+  selectedSquad,
 }: MatchCardProps) {
   const matchInfo = {
     startDate: "19.09.2025",
@@ -97,17 +108,17 @@ export default function MatchCard({
             Deadline: {formatDateTime(match.signupDeadline)}
           </div>
 
-          {/* {match.selectedSquad ? (
+          {selectedSquad ? (
             <div className="flex items-center text-green-600">
               <CalendarCheck className="w-4 h-4 mr-2" />
-              Ingeschreven: squad {match.selectedSquad}
+              Ingeschreven op {selectedSquad.name}
             </div>
           ) : (
             <div className="flex items-center text-gray-600">
               <FileSignature className="w-4 h-4 mr-2" />
               Niet ingeschreven
             </div>
-          )} */}
+          )}
         </div>
 
         {!showInfo && (

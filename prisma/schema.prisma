@@ -50,9 +50,9 @@ model Squad {
 
 model Player {
   id            Int      @id @default(autoincrement())
-  memberName    String
+  memberName    String   @unique
   realName      String
-  npsaId        String?   @unique 
+  npsaId        String?  @unique 
   password      String
   email         String   @unique
   phone         String?

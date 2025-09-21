@@ -15,7 +15,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useRouter } from "next/navigation";
+import { login } from "@/app/actions/actions";
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -25,7 +25,6 @@ const formSchema = z.object({
 });
 
 export function LoginForm() {
-  const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -34,14 +33,9 @@ export function LoginForm() {
     },
   });
 
-  function onSubmit() {
-    // values: z.infer<typeof formSchema>
-    router.push("/matches/1");
-  }
-
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form action={login} className="space-y-4">
         <FormField
           control={form.control}
           name="username"
