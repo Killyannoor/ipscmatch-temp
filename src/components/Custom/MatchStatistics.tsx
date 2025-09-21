@@ -1,17 +1,17 @@
 import Link from "next/link";
-import { Squad } from "../../../generated/prisma";
 import { formatDayAndTime, formatTime } from "@/lib/date";
+import { SquadWithRegistrations } from "@/lib/types";
 
-const MatchStatistics = ({ squads }: { squads: Squad[] }) => {
+const SignupTable = ({ squads }: { squads: SquadWithRegistrations[] }) => {
   return (
-    <div className="bg-white shadow-lg rounded-xl p-6 border border-gray-200 overflow-x-auto">
+    <div className="bg-white shadow-lg rounded-xl border border-gray-200 overflow-x-auto mx-auto p-6">
       <h3 className="text-xl font-bold text-gray-800 mb-4">
         Registratie statistieken
       </h3>
       <table className="min-w-full border-collapse text-sm">
         <thead>
           <tr className="bg-gray-100 text-gray-700">
-            <th className="border-b p-2 text-left w-[220px]">Tijdslot</th>
+            <th className="border-b p-2 text-left w-[220px]">Tijdsquad</th>
             <th className="border-b p-2 text-left w-[100px]">Squad</th>
             <th className="border-b p-2 text-right w-[120px]">Startplaatsen</th>
             <th className="border-b p-2 text-right w-[100px]">Gebruikt</th>
@@ -20,23 +20,28 @@ const MatchStatistics = ({ squads }: { squads: Squad[] }) => {
           </tr>
         </thead>
         <tbody>
-          {squads.map((slot, idx) => (
+          {squads.map((squad, idx) => (
             <tr key={idx} className="hover:bg-gray-50">
               <td className="border-b p-2 text-left">
-                {formatDayAndTime(slot.startTime)} – {formatTime(slot.endTime)}
+                {formatDayAndTime(squad.startTime)} –{" "}
+                {formatTime(squad.endTime)}
               </td>
-              <td className="border-b p-2 text-left">{slot.name}</td>
-              <td className="border-b p-2 text-right">{slot.capacity}</td>
-              <td className="border-b p-2 text-right">0</td>
+              <td className="border-b p-2 text-left">{squad.name}</td>
+              <td className="border-b p-2 text-right">{squad.capacity}</td>
+              <td className="border-b p-2 text-right">
+                {squad.matchRegistrations.length}
+              </td>
               <td
                 className={`border-b p-2 text-right ${
-                  slot.capacity > 0 ? "text-green-600" : "text-red-600"
+                  squad.matchRegistrations.length < squad.capacity
+                    ? "text-green-600"
+                    : "text-red-600"
                 }`}
               >
-                {slot.capacity}
+                {squad.capacity - squad.matchRegistrations.length}
               </td>
               <td className="border-b p-2 text-center">
-                {slot.capacity > 0 ? (
+                {squad.matchRegistrations.length < squad.capacity ? (
                   <Link href={`/matches/${1}/aanmelden`}>
                     <span className="px-3 py-1 text-sm bg-green-500 text-white rounded-md hover:bg-green-600">
                       Aanmelden
@@ -56,4 +61,4 @@ const MatchStatistics = ({ squads }: { squads: Squad[] }) => {
   );
 };
 
-export default MatchStatistics;
+export default SignupTable;

@@ -6,7 +6,8 @@ CREATE TABLE `Match` (
     `email` VARCHAR(191) NOT NULL,
     `phone` VARCHAR(191) NULL,
     `website` VARCHAR(191) NULL,
-    `date` DATETIME(3) NOT NULL,
+    `startDate` DATETIME(3) NULL,
+    `endDate` DATETIME(3) NULL,
     `location` VARCHAR(191) NOT NULL,
     `country` VARCHAR(191) NOT NULL,
     `logoPath` VARCHAR(191) NULL,
@@ -26,7 +27,9 @@ CREATE TABLE `Squad` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(191) NOT NULL,
     `matchId` INTEGER NOT NULL,
-    `capcity` INTEGER NOT NULL,
+    `capacity` INTEGER NOT NULL,
+    `startTime` DATETIME(3) NOT NULL,
+    `endTime` DATETIME(3) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
 
@@ -52,8 +55,7 @@ CREATE TABLE `Player` (
 CREATE TABLE `MatchRegistration` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `playerId` INTEGER NOT NULL,
-    `matchId` INTEGER NOT NULL,
-    `suqadId` INTEGER NULL,
+    `squadId` INTEGER NULL,
     `isPaid` BOOLEAN NOT NULL DEFAULT false,
     `level` VARCHAR(191) NOT NULL,
     `powerFactor` VARCHAR(191) NOT NULL,
@@ -63,7 +65,6 @@ CREATE TABLE `MatchRegistration` (
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
 
-    UNIQUE INDEX `MatchRegistration_playerId_matchId_key`(`playerId`, `matchId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -74,7 +75,4 @@ ALTER TABLE `Squad` ADD CONSTRAINT `Squad_matchId_fkey` FOREIGN KEY (`matchId`) 
 ALTER TABLE `MatchRegistration` ADD CONSTRAINT `MatchRegistration_playerId_fkey` FOREIGN KEY (`playerId`) REFERENCES `Player`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `MatchRegistration` ADD CONSTRAINT `MatchRegistration_matchId_fkey` FOREIGN KEY (`matchId`) REFERENCES `Match`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `MatchRegistration` ADD CONSTRAINT `MatchRegistration_suqadId_fkey` FOREIGN KEY (`suqadId`) REFERENCES `Squad`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `MatchRegistration` ADD CONSTRAINT `MatchRegistration_squadId_fkey` FOREIGN KEY (`squadId`) REFERENCES `Squad`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;

@@ -1,15 +1,33 @@
-export type Match = {
-  id: number;
-  logo: string;
-  name: string;
-  description: string;
-  date: string;
-  selectedSquad?: string;
-  weaponType?: string;
-  country?: string;
-  flagUrl?: string;
-  level: number;
-  capacity: number;
-  spotsTaken: number;
-  signupDeadline: string;
-};
+import { Prisma } from "../../generated/prisma";
+
+export type MatchWithSquads = Prisma.MatchGetPayload<{
+  include: {
+    squads: true;
+  };
+}>;
+
+export type SquadWithRegistrations = Prisma.SquadGetPayload<{
+  include: {
+    matchRegistrations: true;
+  };
+}>;
+
+export type SquadWithRegistrationsAndPlayer = Prisma.SquadGetPayload<{
+  include: {
+    matchRegistrations: {
+      include: {
+        player: true;
+      };
+    };
+  };
+}>;
+
+export type MatchWithSquadsAndRegistrations = Prisma.MatchGetPayload<{
+  include: {
+    squads: {
+      include: {
+        matchRegistrations: true;
+      };
+    };
+  };
+}>;

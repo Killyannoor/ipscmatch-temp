@@ -1,3 +1,24 @@
+INSERT INTO `Match` 
+(name, description, email, phone, website, startDate, endDate, location, country, logoPath, weaponType, signupDeadline, level, capacity, updatedAt) 
+VALUES
+(
+'KW Handgun SSV De Rommert', 
+'Level 2 kwalificatiewedstrijd - 6 stages - 140 schoten - PCC->Modified 40 eu voldoen aan NL09RABOVERDERINVULLEN tnv De Rommert ovv naam, MOS nr en squad', 
+'ipsc@de-rommert.nl', 
+'0612345678', 
+'www.de-rommert.nl', 
+'2025-11-14 10:00:00', 
+'2025-11-16 20:00:00', 
+'Andel', 
+'Nederland', 
+'/schietvereniging.jpg', 
+'Handgun', 
+'2025-09-26 20:00:00', 
+'2', 
+100,
+'2025-09-26 20:00:00'
+);
+
 INSERT INTO Squad (Name, matchid, capacity, startTime, endTime, updatedAt) VALUES
 ('Squad 1', 1, 8, '2025-09-20 06:00:00', '2025-09-20 08:00:00', '2025-09-20 08:00:00'),
 ('Squad 2', 1, 8, '2025-09-20 06:00:00', '2025-09-20 08:00:00', '2025-09-20 08:00:00'),
@@ -19,6 +40,7 @@ INSERT INTO Squad (Name, matchid, capacity, startTime, endTime, updatedAt) VALUE
 
 ('Squad 13', 1, 8, '2025-09-21 11:30:00', '2025-09-21 14:30:00', '2025-09-20 08:00:00'),
 ('Squad 14', 1, 8, '2025-09-21 11:30:00', '2025-09-21 14:30:00', '2025-09-20 08:00:00'),
+('Squad 15', 1, 8, '2025-09-21 11:30:00', '2025-09-21 14:30:00', '2025-09-20 08:00:00'),
 
-('Squad 15', 1, 8, '2025-09-19 17:00:00', '2025-09-19 19:00:00', '2025-09-20 08:00:00'),
-('Squad 16', 1, 8, '2025-09-19 17:00:00', '2025-09-19 19:00:00', '2025-09-20 08:00:00');
+('Prematch Squad 80', 1, 8, '2025-09-19 17:00:00', '2025-09-19 19:00:00', '2025-09-20 08:00:00'),
+('Prematch Squad 90', 1, 8, '2025-09-19 17:00:00', '2025-09-19 19:00:00', '2025-09-20 08:00:00');

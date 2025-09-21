@@ -31,7 +31,6 @@ model Match {
   level          String
   capacity       Int
   squads         Squad[]
-  registrations  MatchRegistration[]
   createdAt      DateTime   @default(now())
   updatedAt      DateTime   @updatedAt
 }
@@ -44,7 +43,7 @@ model Squad {
   startTime  DateTime
   endTime    DateTime
   match     Match    @relation(fields: [matchId], references: [id])
-  matchregistrations MatchRegistration[]
+  matchRegistrations MatchRegistration[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -63,11 +62,9 @@ model Player {
 model MatchRegistration {
   id         Int      @id @default(autoincrement())
   playerId   Int
-  matchId    Int
   player     Player   @relation(fields: [playerId], references: [id])
-  match      Match    @relation(fields: [matchId], references: [id])
-  suqadId    Int?
-  squad      Squad?   @relation(fields: [suqadId], references: [id])
+  squadId    Int?
+  squad      Squad?   @relation(fields: [squadId], references: [id])
   isPaid      Boolean  @default(false)
   level       String
   powerFactor String
@@ -76,8 +73,6 @@ model MatchRegistration {
   note        String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  @@unique([playerId, matchId])
 }
 
 // grand senior bij category toevoegen

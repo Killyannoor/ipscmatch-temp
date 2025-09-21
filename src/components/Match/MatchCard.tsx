@@ -2,11 +2,11 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Calendar, Users, Clock, Target, Star } from "lucide-react";
 import MatchSummary from "../Custom/MatchSummary";
-import { Match } from "../../../generated/prisma";
 import { formatDateTime, formatDate } from "@/lib/date";
+import { MatchWithSquadsAndRegistrations } from "@/lib/types";
 
 type MatchCardProps = {
-  match: Match;
+  match: MatchWithSquadsAndRegistrations;
   showInfo?: boolean;
   onSignup?: () => void;
 };
@@ -30,6 +30,10 @@ export default function MatchCard({
     email: "kwhoofddorp@gmail.com",
     info: "Inschr geld €35,- op reknr NL66INGB0004711092 TNV sv t Fort. ovv Squad/mosnum. Graag klassering opgeven bij inschrijving — PCC onder Modified",
   };
+
+  const signups = match.squads.reduce((acc, squad) => {
+    return acc + squad.matchRegistrations.length;
+  }, 0);
 
   return (
     <Card className="flex flex-col md:flex-row items-center gap-4 p-4 rounded-2xl shadow-lg hover:shadow-xl transition relative">
@@ -71,13 +75,11 @@ export default function MatchCard({
 
           <div
             className={`flex items-center ${
-              match.capacity === match.capacity
-                ? "text-red-600"
-                : "text-gray-600"
+              signups === match.capacity ? "text-red-600" : "text-gray-600"
             }`}
           >
             <Users className="w-4 h-4 mr-2" />
-            {match.capacity} / {match.capacity} plaatsen
+            {signups} / {match.capacity} plaatsen
           </div>
 
           <div className="flex items-center text-gray-600">

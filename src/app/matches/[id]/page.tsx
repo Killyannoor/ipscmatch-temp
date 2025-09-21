@@ -1,5 +1,7 @@
 import MatchDetail from "@/components/Custom/MatchDetails";
 import { PrismaClient } from "../../../../generated/prisma";
+import SignupTable from "@/components/Custom/MatchStatistics";
+import SquadRegistrationsTable from "@/components/Match/SquadRegistrationsTable";
 
 const prisma = new PrismaClient();
 
@@ -9,18 +11,33 @@ export default async function MatchesPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-
   let match = null;
-  if (id) {
-    match = await prisma.match.findUnique({
-      where: { id: 1 },
-      include: {
-        squads: true,
+
+  match = await prisma.match.findUnique({
+    where: { id: parseInt(id) },
+    include: {
+      squads: {
+        include: {
+          matchRegistrations: {
+            include: {
+              player: true,
+            },
+          },
+        },
       },
-    });
-  }
+    },
+  });
 
-  return <div className="">{!!match && <MatchDetail match={match} />}</div>;
+  if (!match) return <div>Geen wedstrijd gevonden</div>;
+
+  return (
+    <div className="max-w-5xl mx-auto p-6 space-y-8">
+      {match && <MatchDetail match={match} />}
+
+      <SignupTable squads={match.squads} />
+
+      {/* Todo: show this when user has signed up for this match */}
+      <SquadRegistrationsTable squads={match.squads} />
+    </div>
+  );
 }
-
-// bij tiidslot weergeven zaterdag 8:00 (squad A)
