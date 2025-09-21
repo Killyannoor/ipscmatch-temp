@@ -22,7 +22,7 @@ export const getSession = async () => {
   return session;
 };
 
-export const login = async (formData: FormData) => {
+export const login = async (prevState: any, formData: FormData) => {
   const session = await getSession();
 
   const formUsername = formData.get("username") as string;
@@ -35,7 +35,9 @@ export const login = async (formData: FormData) => {
   });
 
   if (!user) {
-    return;
+    return {
+      message: "Verkeerde combinatie van gebruikersnaam en wachtwoord.",
+    };
   }
 
   session.id = user.id;

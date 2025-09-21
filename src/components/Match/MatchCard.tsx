@@ -105,7 +105,7 @@ export default function MatchCard({
 
           <div className="flex items-center text-gray-600">
             <Clock className="w-4 h-4 mr-2" />
-            Deadline: {formatDateTime(match.signupDeadline)}
+            Inschrijven vanaf: {formatDateTime(match.signupDeadline)}
           </div>
 
           {selectedSquad ? (

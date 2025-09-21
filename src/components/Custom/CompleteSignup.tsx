@@ -1,21 +1,83 @@
-export default function CompleteSignup() {
-  const squad = {
-    name: "Squad 1",
-    time: "Zaterdag 8:00",
-    players: ["Speler A", "Speler B", "Speler C"],
+import { formatTime } from "@/lib/date";
+import { PrismaClient } from "../../../generated/prisma";
+import { redirect } from "next/navigation";
+import { CircleCheck } from "lucide-react";
+
+const prisma = new PrismaClient();
+
+export default async function CompleteSignup({
+  squadId,
+  registrationId,
+  matchId,
+}: {
+  squadId: string;
+  registrationId: number;
+  matchId: string;
+}) {
+  const squad = await prisma.squad.findUnique({
+    where: { id: parseInt(squadId) },
+    select: {
+      name: true,
+      startTime: true,
+      endTime: true,
+      matchRegistrations: {
+        select: {
+          player: {
+            select: {
+              memberName: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  if (!squad) {
+    return <div>Squad niet gevonden</div>;
+  }
+
+  const handleSubmit = async (formData: FormData) => {
+    "use server";
+
+    const level = formData.get("level") as string;
+    const powerFactor = formData.get("power") as string;
+    const division = formData.get("division") as string;
+    const category = formData.get("category") as string;
+    const note = formData.get("note") as string;
+
+    await prisma.matchRegistration.update({
+      where: { id: registrationId },
+      data: {
+        level,
+        powerFactor,
+        division,
+        category,
+        note,
+      },
+    });
+
+    redirect(`/matches/${matchId}`);
   };
 
   return (
     <>
       <div className="flex flex-col self-center items-center">
-        <h2 className="font-bold self-center">Je inschrijving is bevestigd!</h2>
-        <p>
-          Vul de volgende gegevens in om je inschrijving voor de wedstrijd
-          volledig af te ronden.
-        </p>
+        <div className="w-screen bg-green-700 text-white py-20 flex flex-col items-center">
+          <CircleCheck size={64} strokeWidth={2.5} />
+          <h2 className="font-bold self-center">
+            Je bent ingeschreven voor de wedstrijd!
+          </h2>
+          <p>
+            Vul de volgende gegevens in om je inschrijving voor de wedstrijd
+            volledig af te ronden.
+          </p>
+        </div>
       </div>
 
-      <div className="max-w-5xl mx-auto font-sans rounded-2xl shadow-lg bg-white p-6 space-y-4 text-sm border-[1px]">
+      <form
+        action={handleSubmit}
+        className="max-w-5xl mx-auto font-sans rounded-2xl shadow-lg bg-white p-6 space-y-4 text-sm border-[1px]"
+      >
         <h2 className="text-lg font-semibold text-center">
           Wedstrijdgegevens voltooien
         </h2>
@@ -26,10 +88,14 @@ export default function CompleteSignup() {
             <strong>Naam:</strong> {squad.name}
           </div>
           <div>
-            <strong>Tijd:</strong> {squad.time}
+            <strong>Tijd:</strong> {formatTime(squad.startTime)} -{" "}
+            {formatTime(squad.endTime)}
           </div>
           <div>
-            <strong>Spelers:</strong> {squad.players.join(", ")}
+            <strong>Spelers:</strong>{" "}
+            {squad.matchRegistrations
+              .map((reg) => reg.player.memberName)
+              .join(", ")}
           </div>
         </div>
 
@@ -38,7 +104,14 @@ export default function CompleteSignup() {
           <div className="flex flex-wrap gap-4">
             {["A", "B", "C", "U"].map((level) => (
               <label key={level} className="flex items-center">
-                <input type="radio" name="firearm" className="mr-2" /> {level}
+                <input
+                  type="radio"
+                  name="level"
+                  value={level}
+                  className="mr-2"
+                  required
+                />{" "}
+                {level}
               </label>
             ))}
           </div>
@@ -48,13 +121,16 @@ export default function CompleteSignup() {
           <h3 className="font-medium mb-1 text-sm">Power factor</h3>
           <div className="flex gap-4">
             <label className="flex items-center">
-              <input type="radio" name="power" className="mr-2" /> Minor
+              <input type="radio" name="power" value="Minor" className="mr-2" />{" "}
+              Minor
             </label>
             <label className="flex items-center">
               <input
                 type="radio"
                 name="power"
+                value="Major"
                 className="mr-2"
+                required
                 defaultChecked
               />{" "}
               Major
@@ -62,7 +138,6 @@ export default function CompleteSignup() {
           </div>
         </div>
 
-        {/* Division */}
         <div className="border rounded-xl p-3">
           <h3 className="font-medium mb-1 text-sm">Division</h3>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-y-1">
@@ -79,8 +154,10 @@ export default function CompleteSignup() {
                 <input
                   type="radio"
                   name="division"
+                  value={div}
                   className="mr-2"
                   defaultChecked={div === "Open"}
+                  required
                 />{" "}
                 {div}
               </label>
@@ -103,8 +180,10 @@ export default function CompleteSignup() {
                 <input
                   type="radio"
                   name="category"
+                  value={cat}
                   className="mr-2"
                   defaultChecked={i === 0}
+                  required
                 />
                 {cat}
               </label>
@@ -117,6 +196,7 @@ export default function CompleteSignup() {
             Bericht aan wedstrijdorganisatie
           </h3>
           <textarea
+            name="note"
             className="border w-full p-2 rounded-md text-sm"
             rows={3}
             placeholder="Typ hier je bericht..."
@@ -124,11 +204,14 @@ export default function CompleteSignup() {
         </div>
 
         <div className="flex justify-end">
-          <button className="bg-gray-800 hover:bg-gray-700 px-3 py-1.5 rounded-lg text-white text-sm shadow">
+          <button
+            type="submit"
+            className="bg-gray-800 hover:bg-gray-700 px-3 py-1.5 rounded-lg text-white text-sm shadow cursor-pointer"
+          >
             Bevestigen
           </button>
         </div>
-      </div>
+      </form>
     </>
   );
 }

@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { login } from "@/app/actions/actions";
+import { useActionState } from "react";
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -24,7 +25,13 @@ const formSchema = z.object({
   password: z.string(),
 });
 
+const initialState = {
+  message: "",
+};
+
 export function LoginForm() {
+  const [state, formAction, pending] = useActionState(login, initialState);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -32,10 +39,9 @@ export function LoginForm() {
       password: "",
     },
   });
-
   return (
     <Form {...form}>
-      <form action={login} className="space-y-4">
+      <form action={formAction} className="space-y-4">
         <FormField
           control={form.control}
           name="username"
@@ -65,6 +71,12 @@ export function LoginForm() {
             </FormItem>
           )}
         />
+        {state?.message && (
+          <p className="text-red-600" aria-live="polite">
+            {state.message}
+          </p>
+        )}
+
         <Button type="submit" className="cursor-pointer">
           Inloggen
         </Button>

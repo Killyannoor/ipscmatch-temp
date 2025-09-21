@@ -16,12 +16,15 @@ export default async function Confirm({
   const match = await prisma.match.findUnique({
     where: { id: parseInt(id) },
     select: {
+      id: true,
       signupDeadline: true,
       capacity: true,
     },
   });
 
-  const canSignup = new Date() < match?.signupDeadline!;
+  if (!match) redirect(`/`);
+
+  const canSignup = new Date() > match.signupDeadline!;
 
   if (!canSignup) {
     redirect(`/matches/${id}`);
@@ -39,16 +42,27 @@ export default async function Confirm({
     return await prisma.$transaction(async (tx) => {
       const match = await tx.match.findUnique({
         where: { id: matchId },
-        select: { capacity: true },
+        select: {
+          capacity: true,
+          squads: {
+            where: {
+              id: squadId,
+            },
+            include: {
+              _count: true,
+            },
+          },
+        },
       });
-      if (!match) throw new Error("Match niet gevonden");
 
-      const totalRegs = await tx.matchRegistration.count({
-        where: { squad: { matchId } },
-      });
+      if (!match)
+        redirect(`/matches/${matchId}/?error=geen-wedstrijd-gevonden`);
 
-      if (totalRegs >= match.capacity) {
-        throw new Error("Match capaciteit bereikt");
+      const totalRegs = match?.squads[0]._count.matchRegistrations;
+      const capacity = match?.squads[0].capacity;
+
+      if (totalRegs >= capacity) {
+        redirect(`/matches/${matchId}/?error=squad-vol`);
       }
 
       const alreadyRegistered = await tx.matchRegistration.findFirst({
@@ -59,23 +73,33 @@ export default async function Confirm({
       });
 
       if (alreadyRegistered) {
-        throw new Error("Deze speler is al aangemeld");
+        return alreadyRegistered;
       }
 
-      return await tx.matchRegistration.create({
+      const newRegistration = await tx.matchRegistration.create({
         data: {
           playerId,
           squadId,
         },
       });
+
+      return newRegistration;
     });
   }
 
-  await registerPlayerForMatch(parseInt(id), session.id!, parseInt(squadId));
+  const registration = await registerPlayerForMatch(
+    parseInt(id),
+    session.id!,
+    parseInt(squadId)
+  );
 
   return (
-    <div className="max-w-5xl mx-auto p-6 space-y-8">
-      <CompleteSignup />
+    <div className="max-w-5xl mx-auto px-6 space-y-8">
+      <CompleteSignup
+        squadId={squadId}
+        registrationId={registration.id}
+        matchId={id}
+      />
     </div>
   );
 }

@@ -1,8 +1,36 @@
-import Link from "next/link";
+"use client";
+
 import { formatDayAndTime, formatTime } from "@/lib/date";
 import { SquadWithRegistrations } from "@/lib/types";
+import CountdownButton from "./CountdownButton";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect } from "react";
+import { toast } from "sonner";
 
-const SignupTable = ({ squads }: { squads: SquadWithRegistrations[] }) => {
+const SignupTable = ({
+  squads,
+  signupDeadline,
+  matchId,
+}: {
+  squads: SquadWithRegistrations[];
+  signupDeadline: Date;
+  matchId: number;
+}) => {
+  const router = useRouter();
+
+  useEffect(() => {
+    router.refresh();
+    const error = searchParams.get("error");
+
+    if (error) {
+      if (error === "squad-vol") {
+        toast.error("De squad is vol. Selecteer een andere squad");
+      }
+    }
+  }, []);
+
+  const searchParams = useSearchParams();
+
   return (
     <div className="bg-white shadow-lg rounded-xl border border-gray-200 overflow-x-auto mx-auto p-6">
       <h3 className="text-xl font-bold text-gray-800 mb-4">
@@ -16,7 +44,7 @@ const SignupTable = ({ squads }: { squads: SquadWithRegistrations[] }) => {
             <th className="border-b p-2 text-right w-[120px]">Startplaatsen</th>
             <th className="border-b p-2 text-right w-[100px]">Gebruikt</th>
             <th className="border-b p-2 text-right w-[100px]">Vrij</th>
-            <th className="border-b p-2 text-center w-[120px]">Status</th>
+            <th className="border-b p-2 text-center w-[180px]">Status</th>
           </tr>
         </thead>
         <tbody>
@@ -40,18 +68,13 @@ const SignupTable = ({ squads }: { squads: SquadWithRegistrations[] }) => {
               >
                 {squad.capacity - squad.matchRegistrations.length}
               </td>
-              <td className="border-b p-2 text-center">
-                {squad.matchRegistrations.length < squad.capacity ? (
-                  <Link href={`/matches/${1}/aanmelden/${squad.id}`}>
-                    <span className="px-3 py-1 text-sm bg-green-500 text-white rounded-md hover:bg-green-600">
-                      Aanmelden
-                    </span>
-                  </Link>
-                ) : (
-                  <span className="bg-red-100 text-red-800 text-xs px-2 py-1 rounded-full">
-                    Vol
-                  </span>
-                )}
+              <td className="text-center">
+                <CountdownButton
+                  signupDeadline={signupDeadline}
+                  squadId={squad.id}
+                  isFull={squad.matchRegistrations.length >= squad.capacity}
+                  matchId={matchId}
+                />
               </td>
             </tr>
           ))}
