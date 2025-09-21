@@ -17,6 +17,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { login } from "@/app/actions/actions";
 import { useActionState } from "react";
+import { RefreshCcw } from "lucide-react";
+import { Spinner } from "./ui/shadcn-io/spinner";
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -27,6 +29,10 @@ const formSchema = z.object({
 
 const initialState = {
   message: "",
+};
+
+export type InitialState = {
+  message: string;
 };
 
 export function LoginForm() {
@@ -78,7 +84,7 @@ export function LoginForm() {
         )}
 
         <Button type="submit" className="cursor-pointer">
-          Inloggen
+          Inloggen {pending && <Spinner />}
         </Button>
       </form>
     </Form>

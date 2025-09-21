@@ -17,6 +17,7 @@ const SignupTable = ({
   matchId: number;
 }) => {
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   useEffect(() => {
     router.refresh();
@@ -27,9 +28,7 @@ const SignupTable = ({
         toast.error("De squad is vol. Selecteer een andere squad");
       }
     }
-  }, []);
-
-  const searchParams = useSearchParams();
+  }, [router, searchParams]);
 
   return (
     <div className="bg-white shadow-lg rounded-xl border border-gray-200 overflow-x-auto mx-auto p-6">

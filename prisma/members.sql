@@ -900,7 +900,8 @@ INSERT INTO `Player` (`memberName`, `realName`, `password`, `email`) VALUES
 ('Angelique Iking', 'Angelique Iking', '$2y$14$8j2Ffuy/pWJbPC.p.MjEgeKx4oSsvruBFwwdWaS/BYFaawwryuiXW', 'angelique_iking@hotmail.com'),
 ('Ingrid van der Veken', 'Ingrid van der Veken', '$2y$14$vq/cvPvoWQVl.a670EvBqe3rOM717NPiEb0snmWAc0bzLE9gPx76C', 'ingrid.vd.veken@kpnmail.nl'),
 ('Corné van Ballegooy', 'Corné van Ballegooy', '$2y$14$7R7dB6AEdujOFtPOyn.2ye4fX6RwZJCOVvxzoRUlpPuCIoqZANgv2', 'csvanballegooy@gmail.com'),
-('Joanne Glimmerveen', 'Joanne Glimmerveen', '$2y$14$soypD965ObBUxBTmv1RXk.QfdOURTNpXvPBzycxvC/YV9ImvGcgfG', 'jc.vanballegooy@gmail.com');
+('Joanne Glimmerveen', 'Joanne Glimmerveen', '$2y$14$soypD965ObBUxBTmv1RXk.QfdOURTNpXvPBzycxvC/YV9ImvGcgfG', 'jc.vanballegooy@gmail.com'),
+('Killyan Noor Test', "Testaccount", '$2b$14$ycmOpChP05SwUPeL3yrQmOEiygptPoEdf.4fpNIdFiDKYLClPMmK2', 'killyannoor@gmail.com');
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

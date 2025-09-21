@@ -3,7 +3,7 @@ import { PrismaClient } from "../../../../generated/prisma";
 import SignupTable from "@/components/Custom/MatchStatistics";
 import SquadRegistrationsTable from "@/components/Match/SquadRegistrationsTable";
 import { getSession, logout } from "@/app/actions/actions";
-import { redirect, RedirectType } from "next/navigation";
+import { redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { LogOut } from "lucide-react";
 
