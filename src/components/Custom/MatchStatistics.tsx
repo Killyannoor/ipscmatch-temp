@@ -42,7 +42,7 @@ const SignupTable = ({ squads }: { squads: SquadWithRegistrations[] }) => {
               </td>
               <td className="border-b p-2 text-center">
                 {squad.matchRegistrations.length < squad.capacity ? (
-                  <Link href={`/matches/${1}/aanmelden`}>
+                  <Link href={`/matches/${1}/aanmelden/${squad.id}`}>
                     <span className="px-3 py-1 text-sm bg-green-500 text-white rounded-md hover:bg-green-600">
                       Aanmelden
                     </span>

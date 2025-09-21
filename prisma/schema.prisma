@@ -65,11 +65,11 @@ model MatchRegistration {
   player     Player   @relation(fields: [playerId], references: [id])
   squadId    Int?
   squad      Squad?   @relation(fields: [squadId], references: [id])
-  isPaid      Boolean  @default(false)
-  level       String
-  powerFactor String
-  division    String
-  category    String
+  isPaid      Boolean?  @default(false)
+  level       String?
+  powerFactor String?
+  division    String?
+  category    String?
   note        String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
